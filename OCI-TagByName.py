@@ -234,8 +234,9 @@ for region in analyzed_regions:
     mesh_client=oci.service_mesh.ServiceMeshClient(config=config, signer=signer)
     visual_builder_client=oci.visual_builder.VbInstanceClient(config=config, signer=signer)
 
-    ADs=list_ads(identity_client, tenancy_id)
-
+    all_ads=list_ads(identity_client, tenancy_id)
+    tagging_status = '   {}: Tagging {}: {}'
+    
     for compartment in my_compartments:
         
         finder = ResourcesFinder(compartment.id, custom_retry_strategy)
@@ -252,7 +253,7 @@ for region in analyzed_regions:
                 service='instance'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, instance.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, instance.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     # 1- retrieve instance tags
                     defined_tags_dict = copy.deepcopy(instance.defined_tags)
@@ -286,7 +287,7 @@ for region in analyzed_regions:
 
                     for bootvolattach in instance_bootvolattach:
                         service='bootvolume'
-                        print('   {}: Tagging {}: {}'.format(service, region.region_name, bootvolattach.display_name[0:18]),end=' '*15+'\r',flush=True)
+                        print(tagging_status.format(service, region.region_name, bootvolattach.display_name[0:18]),end=' '*15+'\r',flush=True)
                         
                         bootvol=blk_storage_client.get_boot_volume(bootvolattach.boot_volume_id).data
 
@@ -316,7 +317,7 @@ for region in analyzed_regions:
 
                     for boot_volume_backup in boot_volume_backups:
                         service='boot_backup'
-                        print('   {}: Tagging {}: {}'.format(service, region.region_name, boot_volume_backup.display_name[0:18]),end=' '*15+'\r',flush=True)
+                        print(tagging_status.format(service, region.region_name, boot_volume_backup.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                         bootvolbkp=blk_storage_client.get_boot_volume_backup(boot_volume_backup.id).data
 
@@ -347,7 +348,7 @@ for region in analyzed_regions:
 
                         for vol_attach in instance_vol_attach:
                             service='volume'
-                            print('   {}: Tagging {}: {}'.format(service, region.region_name, vol_attach.display_name[0:18]),end=' '*15+'\r',flush=True)
+                            print(tagging_status.format(service, region.region_name, vol_attach.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                             volume=blk_storage_client.get_volume(vol_attach.volume_id).data
 
@@ -377,7 +378,7 @@ for region in analyzed_regions:
 
                         for volume_backup in volume_backups:
                             service='volume_backup'
-                            print('   {}: Tagging {}: {}'.format(service, region.region_name, volume_backup.display_name[0:18]),end=' '*15+'\r',flush=True)
+                            print(tagging_status.format(service, region.region_name, volume_backup.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                             volbkp=blk_storage_client.get_volume_backup(volume_backup.id).data
 
@@ -420,7 +421,7 @@ for region in analyzed_regions:
                 try:
                     working_bucket=object_client.get_bucket(namespace_name,resource.name).data
 
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, working_bucket.name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, working_bucket.name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(working_bucket.defined_tags)
                     try:
@@ -449,14 +450,14 @@ for region in analyzed_regions:
             # get fss
             #-----------------------------------------
 
-            for ad in ADs:
+            for ad in all_ads:
                 resources=finder.list_fss(fss_client, ad)
 
                 for resource in resources:
                     service='fss'
 
                     try:
-                        print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                        print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
                         
                         defined_tags_dict = copy.deepcopy(resource.defined_tags)
                         try:
@@ -491,7 +492,7 @@ for region in analyzed_regions:
                 service='loadbalancer'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -525,7 +526,7 @@ for region in analyzed_regions:
                 service='ntwloadbalancer'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -559,7 +560,7 @@ for region in analyzed_regions:
                 service='networkfw'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -595,7 +596,7 @@ for region in analyzed_regions:
 
                 try:
                     try:
-                        print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                        print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                         defined_tags_dict = copy.deepcopy(resource.defined_tags)
                         try:
@@ -636,7 +637,7 @@ for region in analyzed_regions:
                             service='dbsys_db'
 
                             try:
-                                print('   {}: Tagging {}: {}'.format(service, region.region_name, database.db_name[0:18]),end=' '*15+'\r',flush=True)
+                                print(tagging_status.format(service, region.region_name, database.db_name[0:18]),end=' '*15+'\r',flush=True)
 
                                 defined_tags_dict = copy.deepcopy(database.defined_tags)
                                 try:
@@ -674,7 +675,7 @@ for region in analyzed_regions:
                 service='autonomous'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -709,7 +710,7 @@ for region in analyzed_regions:
 
                 try:
                     try:
-                        print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                        print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                         defined_tags_dict = copy.deepcopy(resource.defined_tags)
                         try:
@@ -743,7 +744,7 @@ for region in analyzed_regions:
                         service='auto_vm_cluster'
 
                         try:
-                            print('   {}: Tagging {}: {}'.format(service, region.region_name, cloud_autonomous_vm_cluster.display_name[0:18]),end=' '*15+'\r',flush=True)
+                            print(tagging_status.format(service, region.region_name, cloud_autonomous_vm_cluster.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                             defined_tags_dict = copy.deepcopy(cloud_autonomous_vm_cluster.defined_tags)
                             try:
@@ -777,7 +778,7 @@ for region in analyzed_regions:
                         service='cloud_vm_cluster'
 
                         try:
-                            print('   {}: Tagging {}: {}'.format(service, region.region_name, cloud_vm_cluster.display_name[0:18]),end=' '*15+'\r',flush=True)
+                            print(tagging_status.format(service, region.region_name, cloud_vm_cluster.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                             defined_tags_dict = copy.deepcopy(cloud_vm_cluster.defined_tags)
                             try:
@@ -821,7 +822,7 @@ for region in analyzed_regions:
                 mysql_inst=mysql_client.get_db_system(resource.id).data
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, mysql_inst.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, mysql_inst.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(mysql_inst.defined_tags)
 
@@ -885,7 +886,7 @@ for region in analyzed_regions:
                 service='nosql'
                 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -919,7 +920,7 @@ for region in analyzed_regions:
                 service='opensearch'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -955,7 +956,7 @@ for region in analyzed_regions:
                 resource=analytics_client.get_analytics_instance(resource.id).data
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -989,7 +990,7 @@ for region in analyzed_regions:
                 service='bigdata'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1023,7 +1024,7 @@ for region in analyzed_regions:
                 service='datacatalog'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1057,7 +1058,7 @@ for region in analyzed_regions:
                 service='dataintegration'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1094,7 +1095,7 @@ for region in analyzed_regions:
                 service='function_app'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1128,7 +1129,7 @@ for region in analyzed_regions:
                     service='function'
 
                     try:
-                        print('   {}: Tagging {}: {}'.format(service, region.region_name, fn_app.display_name[0:18]),end=' '*15+'\r',flush=True)
+                        print(tagging_status.format(service, region.region_name, fn_app.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                         defined_tags_dict = copy.deepcopy(fn_app.defined_tags)
                         try:
@@ -1162,7 +1163,7 @@ for region in analyzed_regions:
                 service='container'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1196,7 +1197,7 @@ for region in analyzed_regions:
                 service='artifact'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1230,7 +1231,7 @@ for region in analyzed_regions:
                 service='mesh'
 
                 try:
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, resource.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
@@ -1270,7 +1271,7 @@ for region in analyzed_regions:
                 vb_inst=visual_builder_client.get_vb_instance(resource.id).data
 
                 try:                
-                    print('   {}: Tagging {}: {}'.format(service, region.region_name, vb_inst.display_name[0:18]),end=' '*15+'\r',flush=True)
+                    print(tagging_status.format(service, region.region_name, vb_inst.display_name[0:18]),end=' '*15+'\r',flush=True)
 
                     defined_tags_dict = copy.deepcopy(vb_inst.defined_tags)
 
