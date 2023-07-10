@@ -18,7 +18,7 @@ class ResourcesFinder:
 
     def list_instances(self, core_client):
 
-        Good_States=['RUNNING', 'STOPPED']
+        desired_states=['RUNNING', 'STOPPED']
         resources=[]
         items=oci.pagination.list_call_get_all_results(
                                                         core_client.list_instances, 
@@ -27,7 +27,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources
@@ -272,7 +272,7 @@ class ResourcesFinder:
 
     def list_autonomous_db(self, database_client):
 
-        Good_States=['AVAILABLE','STOPPED']
+        desired_states=['AVAILABLE','STOPPED']
         resources=[]
         items=oci.pagination.list_call_get_all_results(
                                                         database_client.list_autonomous_databases, 
@@ -281,7 +281,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources
@@ -292,7 +292,7 @@ class ResourcesFinder:
 
     def list_mysql_db(self, mysql_client):
 
-        Good_States=['ACTIVE','INACTIVE']
+        desired_states=['ACTIVE','INACTIVE']
         resources=[]
 
         items=oci.pagination.list_call_get_all_results(
@@ -302,7 +302,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources
@@ -410,7 +410,7 @@ class ResourcesFinder:
 
     def list_analytics(self, analytics_client):
 
-        Good_States=['ACTIVE', 'INACTIVE']
+        desired_states=['ACTIVE', 'INACTIVE']
         resources=[]
         items=oci.pagination.list_call_get_all_results(
                                                         analytics_client.list_analytics_instances,
@@ -419,7 +419,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources
@@ -468,7 +468,7 @@ class ResourcesFinder:
 
     def list_workspaces(self, data_integration_client):
 
-        Good_States=['ACTIVE', 'STOPPED']
+        desired_states=['ACTIVE', 'STOPPED']
         resources=[]
         items=oci.pagination.list_call_get_all_results( 
                                                         data_integration_client.list_workspaces, 
@@ -477,7 +477,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources
@@ -526,7 +526,7 @@ class ResourcesFinder:
 
     def list_container_instances(self, container_client):
 
-        Good_States=['ACTIVE', 'INACTIVE']
+        desired_states=['ACTIVE', 'INACTIVE']
         resources=[]
         items=oci.pagination.list_call_get_all_results(
                                                         container_client.list_container_instances, 
@@ -535,7 +535,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources
@@ -586,7 +586,7 @@ class ResourcesFinder:
 
         # vb instances must be running to update tags
         resources=[]
-        Good_States=['ACTIVE', 'INACTIVE']
+        desired_states=['ACTIVE', 'INACTIVE']
 
         items=oci.pagination.list_call_get_all_results(
                                                         visual_builder_client.list_vb_instances, 
@@ -595,7 +595,7 @@ class ResourcesFinder:
                                                         ).data
 
         for item in items:
-            if (item.lifecycle_state in Good_States):
+            if (item.lifecycle_state in desired_states):
                 resources.append(item)
 
         return resources

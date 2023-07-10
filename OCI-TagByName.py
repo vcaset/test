@@ -66,9 +66,9 @@ def parse_arguments():
                         help='compartment ocid to exclude, default is none')
     parser.add_argument('-rg', default='', dest='target_region', 
                         help='region to analyze, default: all regions')
-    parser.add_argument('-tn', default='', dest='TagNamespace', 
+    parser.add_argument('-tn', default='', dest='tag_namespace', 
                         help='name of the TagNamespace owning your TagKey',required=True)
-    parser.add_argument('-tk', default='', dest='TagKey', 
+    parser.add_argument('-tk', default='', dest='tag_key', 
                         help='name of the TagKey to apply',required=True)
     parser.add_argument('-c', action='store_true', default=False, dest='compute', 
                         help='Tag Compute resources')
@@ -174,7 +174,7 @@ print_info(green, 'Compartment(#)', 'selected', len(my_compartments))
 # check TagNamespace and TagKey
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-check_tags(identity_client, search_client, cmd.TagNamespace, cmd.TagKey)
+check_tags(identity_client, search_client, cmd.tag_namespace, cmd.tag_key)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
 # print header
@@ -260,11 +260,11 @@ for region in analyzed_regions:
                     # 2- add key/value to defined_tags_dict
                     # 2a- if tagnamespace already exists in defined_tags_dict:
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = instance.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = instance.display_name
 
                     # 2b- else when tagnamespace doesn't exist in defined_tags_dict
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: instance.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: instance.display_name}})
                     
                     tagger = ResourcesTagger(core_client)
                     tagger.tag_instance_resource(instance.id, defined_tags_dict)
@@ -292,9 +292,9 @@ for region in analyzed_regions:
 
                         defined_tags_dict = copy.deepcopy(bootvol.defined_tags)
                         try:
-                            defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = instance.display_name
+                            defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = instance.display_name
                         except Exception:
-                            defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: instance.display_name}})
+                            defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: instance.display_name}})
 
                         tagger = ResourcesTagger(blk_storage_client)
                         tagger.tag_bootvolume_resource(bootvol.id, defined_tags_dict)
@@ -322,9 +322,9 @@ for region in analyzed_regions:
 
                         defined_tags_dict = copy.deepcopy(boot_volume_backup.defined_tags)
                         try:
-                            defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = instance.display_name
+                            defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = instance.display_name
                         except Exception:
-                            defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: instance.display_name}})
+                            defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: instance.display_name}})
 
                         tagger = ResourcesTagger(blk_storage_client)
                         tagger.tag_boot_backup_resource(boot_volume_backup.id, defined_tags_dict)
@@ -353,9 +353,9 @@ for region in analyzed_regions:
 
                             defined_tags_dict = copy.deepcopy(volume.defined_tags)
                             try:
-                                defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = instance.display_name
+                                defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = instance.display_name
                             except Exception:
-                                defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: instance.display_name}})
+                                defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: instance.display_name}})
 
                             tagger = ResourcesTagger(blk_storage_client)
                             tagger.tag_volume_resource(volume.id, defined_tags_dict)
@@ -383,9 +383,9 @@ for region in analyzed_regions:
 
                             defined_tags_dict = copy.deepcopy(volume_backup.defined_tags)
                             try:
-                                defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = instance.display_name
+                                defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = instance.display_name
                             except Exception:
-                                defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: instance.display_name}})
+                                defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: instance.display_name}})
 
                             tagger = ResourcesTagger(blk_storage_client)
                             tagger.tag_volume_backup_resource(volume_backup.id, defined_tags_dict)
@@ -424,9 +424,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(working_bucket.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.name}})
 
                     tagger = ResourcesTagger(object_client)
                     tagger.tag_bucket_resource(working_bucket.name, defined_tags_dict)
@@ -460,9 +460,9 @@ for region in analyzed_regions:
                         
                         defined_tags_dict = copy.deepcopy(resource.defined_tags)
                         try:
-                            defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                            defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                         except Exception:
-                            defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                            defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
 
                         tagger = ResourcesTagger(fss_client)
                         tagger.tag_fss_resource(resource.id, defined_tags_dict)
@@ -495,9 +495,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(loadbalancer_client)
                     tagger.tag_lb_resource(resource.id, defined_tags_dict)
@@ -529,9 +529,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(networkloadbalancer_client)
                     tagger.tag_nlb_resource(resource.id, defined_tags_dict)
@@ -563,9 +563,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(networkfw_client)
                     tagger.tag_networkfw_resource(resource.id, defined_tags_dict)
@@ -599,9 +599,9 @@ for region in analyzed_regions:
 
                         defined_tags_dict = copy.deepcopy(resource.defined_tags)
                         try:
-                            defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                            defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                         except Exception:
-                            defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                            defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                         
                         tagger = ResourcesTagger(database_client)
                         tagger.tag_dbsystem_resource(resource.id, defined_tags_dict)
@@ -640,9 +640,9 @@ for region in analyzed_regions:
 
                                 defined_tags_dict = copy.deepcopy(database.defined_tags)
                                 try:
-                                    defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                                    defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                                 except Exception:
-                                    defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                                    defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
 
                                 tagger = ResourcesTagger(database_client)
                                 tagger.tag_dbsys_db_resource(database.id, defined_tags_dict)
@@ -678,9 +678,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(database_client)
                     tagger.tag_autonomous_resource(resource.id, defined_tags_dict)
@@ -713,9 +713,9 @@ for region in analyzed_regions:
 
                         defined_tags_dict = copy.deepcopy(resource.defined_tags)
                         try:
-                            defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                            defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                         except Exception:
-                            defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                            defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                         
                         tagger = ResourcesTagger(database_client)
                         tagger.tag_exa_infra_resource(resource.id, defined_tags_dict)
@@ -747,9 +747,9 @@ for region in analyzed_regions:
 
                             defined_tags_dict = copy.deepcopy(cloud_autonomous_vm_cluster.defined_tags)
                             try:
-                                defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = cloud_autonomous_vm_cluster.display_name
+                                defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = cloud_autonomous_vm_cluster.display_name
                             except Exception:
-                                defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: cloud_autonomous_vm_cluster.display_name}})
+                                defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: cloud_autonomous_vm_cluster.display_name}})
                             
                             tagger = ResourcesTagger(database_client)
                             tagger.tag_auto_vm_cluster_resource(cloud_autonomous_vm_cluster.id, defined_tags_dict)
@@ -781,9 +781,9 @@ for region in analyzed_regions:
 
                             defined_tags_dict = copy.deepcopy(cloud_vm_cluster.defined_tags)
                             try:
-                                defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = cloud_vm_cluster.display_name
+                                defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = cloud_vm_cluster.display_name
                             except Exception:
-                                defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: cloud_vm_cluster.display_name}})
+                                defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: cloud_vm_cluster.display_name}})
                             
                             tagger = ResourcesTagger(database_client)
                             tagger.tag_cloud_vm_cluster_resource(cloud_vm_cluster.id, defined_tags_dict)
@@ -826,9 +826,9 @@ for region in analyzed_regions:
                     defined_tags_dict = copy.deepcopy(mysql_inst.defined_tags)
 
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = mysql_inst.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = mysql_inst.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: mysql_inst.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: mysql_inst.display_name}})
 
                     # if != means tag is missing
                     if defined_tags_dict != mysql_inst.defined_tags:
@@ -843,14 +843,14 @@ for region in analyzed_regions:
                                                         retry_strategy=custom_retry_strategy
                                                         )
                             
-                            wait_response = oci.wait_until(
-                                                            mysql_client, 
-                                                            mysql_client.get_db_system(mysql_inst.id),
-                                                            'lifecycle_state', 
-                                                            'ACTIVE', 
-                                                            max_wait_seconds=600, 
-                                                            retry_strategy=custom_retry_strategy
-                                                            ).data
+                            oci.wait_until(
+                                            mysql_client, 
+                                            mysql_client.get_db_system(mysql_inst.id),
+                                            'lifecycle_state', 
+                                            'ACTIVE', 
+                                            max_wait_seconds=600, 
+                                            retry_strategy=custom_retry_strategy
+                                            ).data
 
                         tagger = ResourcesTagger(mysql_client)
                         tagger.tag_cloud_vm_cluster_resource(mysql_inst.id, defined_tags_dict)
@@ -889,9 +889,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.name}})
                     
                     tagger = ResourcesTagger(nosql_client)
                     tagger.tag_nosql_resource(resource.id, defined_tags_dict)
@@ -923,9 +923,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(opensearch_client)
                     tagger.tag_opensearch_resource(resource.id, defined_tags_dict)
@@ -959,9 +959,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.name}})
                     
                     tagger = ResourcesTagger(analytics_client)
                     tagger.tag_analytics_resource(resource.id, defined_tags_dict)
@@ -993,9 +993,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(bds_client)
                     tagger.tag_bigdata_resource(resource.id, defined_tags_dict)
@@ -1027,9 +1027,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
 
                     tagger = ResourcesTagger(data_catalog_client)
                     tagger.tag_data_catalog_resource(resource.id, defined_tags_dict)
@@ -1061,9 +1061,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
 
                     tagger = ResourcesTagger(data_integration_client)
                     # submit 2 attributes as a workaround, crashs if only one submitted (oci v2.105.0)
@@ -1098,9 +1098,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(function_client)
                     tagger.tag_function_app_resource(resource.id, defined_tags_dict)
@@ -1132,9 +1132,9 @@ for region in analyzed_regions:
 
                         defined_tags_dict = copy.deepcopy(fn_app.defined_tags)
                         try:
-                            defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                            defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                         except Exception:
-                            defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                            defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                         
                         tagger = ResourcesTagger(function_client)
                         tagger.tag_function_resource(fn_app.id, defined_tags_dict)
@@ -1166,9 +1166,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(container_client)
                     tagger.tag_container_resource(resource.id, defined_tags_dict)
@@ -1200,9 +1200,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(artifact_client)
                     tagger.tag_artifact_resource(resource.id, defined_tags_dict)
@@ -1234,9 +1234,9 @@ for region in analyzed_regions:
 
                     defined_tags_dict = copy.deepcopy(resource.defined_tags)
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = resource.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = resource.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: resource.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: resource.display_name}})
                     
                     tagger = ResourcesTagger(mesh_client)
                     tagger.tag_mesh_resource(resource.id, defined_tags_dict)
@@ -1275,9 +1275,9 @@ for region in analyzed_regions:
                     defined_tags_dict = copy.deepcopy(vb_inst.defined_tags)
 
                     try:
-                        defined_tags_dict[cmd.TagNamespace][cmd.TagKey] = vb_inst.display_name
+                        defined_tags_dict[cmd.tag_namespace][cmd.tag_key] = vb_inst.display_name
                     except Exception:
-                        defined_tags_dict.update({cmd.TagNamespace: {cmd.TagKey: vb_inst.display_name}})
+                        defined_tags_dict.update({cmd.tag_namespace: {cmd.tag_key: vb_inst.display_name}})
 
                     # if != means tag is missing
                     if defined_tags_dict != vb_inst.defined_tags:
@@ -1292,19 +1292,24 @@ for region in analyzed_regions:
                                                                     retry_strategy=custom_retry_strategy
                                                                     )
 
-                            wait_response = oci.wait_until(
-                                                            visual_builder_client, 
-                                                            visual_builder_client.get_vb_instance(vb_inst.id), 
-                                                            'lifecycle_state', 
-                                                            'ACTIVE', 
-                                                            max_wait_seconds=600, 
-                                                            retry_strategy=custom_retry_strategy
-                                                            ).data
+                            oci.wait_until(
+                                            visual_builder_client, 
+                                            visual_builder_client.get_vb_instance(vb_inst.id), 
+                                            'lifecycle_state', 
+                                            'ACTIVE', 
+                                            max_wait_seconds=600, 
+                                            retry_strategy=custom_retry_strategy
+                                            ).data
 
                         tagger = ResourcesTagger(visual_builder_client)
                         tagger.tag_visual_builder_resource(vb_inst.id, defined_tags_dict)
 
-                        wait_response = oci.wait_until(visual_builder_client, visual_builder_client.get_vb_instance(vb_inst.id), 'lifecycle_state', 'ACTIVE', max_wait_seconds=600).data
+                        oci.wait_until(
+                                        visual_builder_client, 
+                                        visual_builder_client.get_vb_instance(vb_inst.id), 
+                                        'lifecycle_state', 'ACTIVE', 
+                                        max_wait_seconds=600
+                                        ).data
                         
                         output_data = {
                             'color': yellow,
@@ -1330,8 +1335,17 @@ for region in analyzed_regions:
                     # stop instance previously stopped
                     if stop_after_tag == True:
                             print('   Stopping Visual Builder: {}'.format(vb_inst.display_name),end=' '*40 +'\r',flush=True)
-                            visual_builder_client.stop_vb_instance(vb_inst.id, retry_strategy=custom_retry_strategy)
-                            wait_response = oci.wait_until(visual_builder_client, visual_builder_client.get_vb_instance(vb_inst.id), 'lifecycle_state', 'UPDATING', max_wait_seconds=600).data
+                            visual_builder_client.stop_vb_instance(
+                                                                   vb_inst.id, 
+                                                                   retry_strategy=custom_retry_strategy
+                                                                   )
+                            oci.wait_until(
+                                            visual_builder_client, 
+                                            visual_builder_client.get_vb_instance(vb_inst.id), 
+                                            'lifecycle_state', 
+                                            'UPDATING', 
+                                            max_wait_seconds=600
+                                            ).data
 
                 except Exception as e:
                     print(red(f'\n region:{region.region_name}\n compartment:{compartment.name}\n name:{vb_inst.display_name}\n ocid:{vb_inst.id}\n {e}\n'))

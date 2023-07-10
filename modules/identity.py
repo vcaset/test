@@ -264,7 +264,7 @@ def get_compartment_list(identity_client, compartment_id, excluded_comp):
 
     return active_compartments
 
-def check_tags(identity_client, search_client, cmd_TagNamespace, cmd_TagKey):
+def check_tags(identity_client, search_client, cmd_tag_namespace, cmd_tag_key):
 
     try:
         search = oci.resource_search.models.StructuredSearchDetails(
@@ -279,10 +279,10 @@ def check_tags(identity_client, search_client, cmd_TagNamespace, cmd_TagKey):
             all_tag_namespaces.update({item.display_name : item.identifier})
 
         # search if TagNameSpace exists in tag_namespaces
-        if cmd_TagNamespace in all_tag_namespaces:
+        if cmd_tag_namespace in all_tag_namespaces:
 
             # check tag_namespace state
-            tag_namespace=identity_client.get_tag_namespace(all_tag_namespaces[cmd_TagNamespace]).data
+            tag_namespace=identity_client.get_tag_namespace(all_tag_namespaces[cmd_tag_namespace]).data
 
             if tag_namespace.is_retired == False and tag_namespace.lifecycle_state == 'ACTIVE':
                 print_info(green, 'Tag Namespace', 'found', tag_namespace.name)
@@ -291,7 +291,7 @@ def check_tags(identity_client, search_client, cmd_TagNamespace, cmd_TagKey):
                 
                 for tag_key in tag_keys:
 
-                    if tag_key.name == cmd_TagKey:
+                    if tag_key.name == cmd_tag_key:
 
                         # check tag_key state
                         if tag_key.is_retired == False and tag_key.lifecycle_state == 'ACTIVE':
@@ -312,10 +312,10 @@ def check_tags(identity_client, search_client, cmd_TagNamespace, cmd_TagKey):
                 print_error('Invalid Tag Namespace state', 'Retired:', tag_namespace.is_retired, 'Lifecycle_State:', tag_namespace.lifecycle_state)
                 raise SystemExit(1)
         else:
-            print_error('Tag Namespace not found', cmd_TagNamespace)
+            print_error('Tag Namespace not found', cmd_tag_namespace)
             raise SystemExit(1)
         
-        print_error('Tag Key not found', cmd_TagKey)
+        print_error('Tag Key not found', cmd_tag_key)
         raise SystemExit(1)
 
     except oci.exceptions.ServiceError as e:
@@ -327,20 +327,20 @@ def check_tags(identity_client, search_client, cmd_TagNamespace, cmd_TagKey):
         raise SystemExit(1)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
-# get all ADs per region
+# get all Availaibility Domains per region
 # - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 def list_ads(identity_client, tenancy_id):
-    print('   Retrieving ADs...',end=' '*15+'\r',flush=True)
+    print('   Retrieving Availaibility Domains...',end=' '*15+'\r',flush=True)
 
     try:
-        ADs_in_region=[]
-        ADs = identity_client.list_availability_domains(tenancy_id).data
+        region_ads=[]
+        all_ads = identity_client.list_availability_domains(tenancy_id).data
 
-        for ad in ADs:
-            ADs_in_region.append(ad.name)
+        for ad in all_ads:
+            region_ads.append(ad.name)
 
-        print('   Ads retrieved...',end=' '*15+'\r',flush=True)    
+        print('   Availaibility Domains retrieved...',end=' '*15+'\r',flush=True)    
    
     except oci.exceptions.ServiceError as e:
         print_error(e)
@@ -350,4 +350,4 @@ def list_ads(identity_client, tenancy_id):
         print_error(e)
         raise SystemExit(1) 
     
-    return ADs_in_region
+    return region_ads

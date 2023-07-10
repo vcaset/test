@@ -168,17 +168,17 @@ class ResourcesTagger:
         try:
             details = oci.network_load_balancer.models.UpdateNetworkLoadBalancerDetails(defined_tags=defined_tags_dict)
             response = self.oci_client.update_network_load_balancer(
-                                                               resource_id, 
-                                                               details, 
-                                                               retry_strategy=custom_retry_strategy
-                                                               )
-            wait_response = oci.wait_until(
-                                            self.oci_client, 
-                                            self.oci_client.get_network_load_balancer(resource_id), 
-                                            'lifecycle_state', 
-                                            'ACTIVE', 
-                                            max_wait_seconds=600
-                                            ).data
+                                                                    resource_id, 
+                                                                    details, 
+                                                                    retry_strategy=custom_retry_strategy
+                                                                    )
+            oci.wait_until(
+                            self.oci_client, 
+                            self.oci_client.get_network_load_balancer(resource_id), 
+                            'lifecycle_state', 
+                            'ACTIVE', 
+                            max_wait_seconds=600
+                            ).data
         except Exception as e:
             print(red(e))
             response=''
